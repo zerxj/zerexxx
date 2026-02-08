@@ -1,0 +1,544 @@
+-- 44S AP SPAMMER - UI PREMIUM AMÉLIORÉ
+repeat task.wait() until game:IsLoaded()
+task.wait(1)
+
+-- Services
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Variables
+local LocalPlayer = Players.LocalPlayer
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Création de l'UI
+local gui = Instance.new("ScreenGui")
+gui.Name = "44SAPSPAMMERUI"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+
+-- Frame principal
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 360, 0, 540)
+mainFrame.Position = UDim2.new(0.5, -180, 0.5, -270)
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = gui
+
+-- Coins arrondis
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 16)
+corner.Parent = mainFrame
+
+-- Gradient de fond
+local bgGradient = Instance.new("UIGradient")
+bgGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(18, 15, 28)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(12, 12, 18)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 12, 22))
+}
+bgGradient.Rotation = 135
+bgGradient.Parent = mainFrame
+
+-- GROS CONTOUR NOIR TRANSPARANT (premier plan)
+local contourNoir = Instance.new("UIStroke")
+contourNoir.Thickness = 4.5  -- PLUS GROS
+contourNoir.Color = Color3.fromRGB(0, 0, 0)  -- Noir
+contourNoir.Transparency = 0.6  -- Transparent
+contourNoir.LineJoinMode = Enum.LineJoinMode.Round
+contourNoir.Parent = mainFrame
+
+-- PETIT CONTOUR MAUVE (sur le noir)
+local contourMauve = Instance.new("UIStroke")
+contourMauve.Thickness = 1.8  -- Un peu plus épais pour être visible sur le noir
+contourMauve.Color = Color3.fromRGB(180, 80, 255)  -- Belle couleur mauve
+contourMauve.Transparency = 0.15  -- Moins transparent
+contourMauve.LineJoinMode = Enum.LineJoinMode.Round
+contourMauve.Parent = mainFrame
+
+-- Effet de neige léger
+local snowContainer = Instance.new("Frame")
+snowContainer.Size = UDim2.new(1, 0, 1, 0)
+snowContainer.BackgroundTransparency = 1
+snowContainer.ClipsDescendants = true
+snowContainer.ZIndex = 10
+snowContainer.Parent = mainFrame
+
+-- Fonction pour créer des flocons de neige
+local function createSnowflake()
+    local snowflake = Instance.new("Frame")
+    snowflake.Size = UDim2.new(0, math.random(2, 4), 0, math.random(2, 4))
+    snowflake.Position = UDim2.new(math.random(0, 100) / 100, 0, 0, -10)
+    snowflake.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    snowflake.BackgroundTransparency = math.random(40, 70) / 100
+    snowflake.BorderSizePixel = 0
+    snowflake.ZIndex = 11
+    snowflake.Parent = snowContainer
+    
+    local snowCorner = Instance.new("UICorner")
+    snowCorner.CornerRadius = UDim.new(1, 0)
+    snowCorner.Parent = snowflake
+    
+    -- Animation de chute
+    local fallTime = math.random(4, 7)
+    local sway = math.random(-20, 20)
+    
+    TweenService:Create(snowflake, TweenInfo.new(fallTime, Enum.EasingStyle.Linear), {
+        Position = UDim2.new(snowflake.Position.X.Scale, sway, 1, 10)
+    }):Play()
+    
+    task.delay(fallTime, function()
+        snowflake:Destroy()
+    end)
+end
+
+-- Générer de la neige en continu
+spawn(function()
+    while wait(0.1) do
+        createSnowflake()
+    end
+end)
+
+-- Header
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 75)
+header.BackgroundTransparency = 1
+header.BorderSizePixel = 0
+header.ZIndex = 3
+header.Parent = mainFrame
+
+-- Titre "44S AP SPAMMER"
+local mainTitle = Instance.new("TextLabel")
+mainTitle.Size = UDim2.new(1, -40, 1, 0)
+mainTitle.Position = UDim2.new(0, 20, 0, 0)
+mainTitle.Text = "44S AP SPAMMER"
+mainTitle.TextColor3 = Color3.fromRGB(180, 80, 255)
+mainTitle.BackgroundTransparency = 1
+mainTitle.Font = Enum.Font.GothamBlack
+mainTitle.TextSize = 26
+mainTitle.TextXAlignment = Enum.TextXAlignment.Center
+mainTitle.ZIndex = 5
+mainTitle.Parent = header
+
+-- Animation simple de pulsation
+spawn(function()
+    while wait() do
+        TweenService:Create(mainTitle, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            TextColor3 = Color3.fromRGB(200, 100, 255)
+        }):Play()
+        wait(2)
+        TweenService:Create(mainTitle, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            TextColor3 = Color3.fromRGB(180, 80, 255)
+        }):Play()
+        wait(2)
+    end
+end)
+
+-- BARRE MAUVE AVEC ANIMATION
+local separator = Instance.new("Frame")
+separator.Size = UDim2.new(0.9, 0, 0, 3)
+separator.Position = UDim2.new(0.05, 0, 1, -1.5)
+separator.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+separator.BorderSizePixel = 0
+separator.ZIndex = 5
+separator.Parent = header
+
+local separatorCorner = Instance.new("UICorner")
+separatorCorner.CornerRadius = UDim.new(1, 0)
+separatorCorner.Parent = separator
+
+-- Animation de la barre mauve
+spawn(function()
+    local colors = {
+        Color3.fromRGB(180, 80, 255),
+        Color3.fromRGB(200, 100, 255),
+        Color3.fromRGB(160, 60, 240),
+        Color3.fromRGB(180, 80, 255)
+    }
+    
+    local widthSequence = {
+        UDim2.new(0.9, 0, 0, 3),
+        UDim2.new(0.92, 0, 0, 3),
+        UDim2.new(0.88, 0, 0, 3),
+        UDim2.new(0.9, 0, 0, 3)
+    }
+    
+    while wait() do
+        -- Animation de couleur
+        for _, color in ipairs(colors) do
+            TweenService:Create(separator, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = color
+            }):Play()
+            wait(0.8)
+        end
+        
+        -- Animation de taille
+        for _, size in ipairs(widthSequence) do
+            TweenService:Create(separator, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = size
+            }):Play()
+            wait(0.4)
+        end
+    end
+end)
+
+-- Discord
+local discordFrame = Instance.new("Frame")
+discordFrame.Size = UDim2.new(1, -30, 0, 32)
+discordFrame.Position = UDim2.new(0, 15, 0, 80)
+discordFrame.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
+discordFrame.BackgroundTransparency = 0.5
+discordFrame.BorderSizePixel = 0
+discordFrame.ZIndex = 3
+discordFrame.Parent = mainFrame
+
+local discordCorner = Instance.new("UICorner")
+discordCorner.CornerRadius = UDim.new(0, 8)
+discordCorner.Parent = discordFrame
+
+local discordStroke = Instance.new("UIStroke")
+discordStroke.Thickness = 1
+discordStroke.Color = Color3.fromRGB(180, 80, 255)
+discordStroke.Transparency = 0.5
+discordStroke.Parent = discordFrame
+
+local discordLabel = Instance.new("TextLabel")
+discordLabel.Size = UDim2.new(1, 0, 1, 0)
+discordLabel.Text = ""  -- Vide au départ
+discordLabel.TextColor3 = Color3.fromRGB(180, 80, 255)
+discordLabel.BackgroundTransparency = 1
+discordLabel.Font = Enum.Font.Gotham
+discordLabel.TextSize = 11
+discordLabel.ZIndex = 4
+discordLabel.Parent = discordFrame
+
+-- EFFET D'ÉCRITURE LETTRE PAR LETTRE
+local discordText = "discord.gg/ASGBhWJPgv"
+local discordIndex = 0
+local discordErasing = false
+
+spawn(function()
+    while wait() do
+        if not discordErasing then
+            -- Écriture lettre par lettre
+            if discordIndex < #discordText then
+                discordIndex = discordIndex + 1
+                discordLabel.Text = string.sub(discordText, 1, discordIndex)
+                wait(0.05)
+            else
+                -- Attendre 3 secondes quand complet
+                wait(3)
+                discordErasing = true
+            end
+        else
+            -- Effaçage lettre par lettre
+            if discordIndex > 0 then
+                discordIndex = discordIndex - 1
+                discordLabel.Text = string.sub(discordText, 1, discordIndex)
+                wait(0.05)
+            else
+                -- Attendre 1 seconde quand vide
+                wait(1)
+                discordErasing = false
+            end
+        end
+    end
+end)
+
+-- Contenu
+local content = Instance.new("Frame")
+content.Size = UDim2.new(1, -30, 1, -165)
+content.Position = UDim2.new(0, 15, 0, 120)
+content.BackgroundTransparency = 1
+content.ZIndex = 3
+content.Parent = mainFrame
+
+-- Liste des joueurs
+local playersList = Instance.new("ScrollingFrame")
+playersList.Size = UDim2.new(1, 0, 1, 0)
+playersList.Position = UDim2.new(0, 0, 0, 0)
+playersList.BackgroundTransparency = 1
+playersList.BorderSizePixel = 0
+playersList.ScrollBarThickness = 4
+playersList.ScrollBarImageColor3 = Color3.fromRGB(180, 80, 255)
+playersList.CanvasSize = UDim2.new(0, 0, 0, 0)
+playersList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+playersList.Parent = content
+
+local listLayout = Instance.new("UIListLayout")
+listLayout.Padding = UDim.new(0, 6)
+listLayout.Parent = playersList
+
+-- Commandes
+local Commands = {"jail", "ragdoll", "rocket", "balloon", "inverse", "tiny"}
+
+-- Trouver le Remote
+local function FindRemote()
+    for _, obj in ipairs(ReplicatedStorage:GetDescendants()) do
+        local name = obj.Name:lower()
+        if (name:find("executecommand") or name:find("admincommand")) and 
+           (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) then
+            return obj
+        end
+    end
+    return nil
+end
+
+local AdminRemote = FindRemote()
+
+-- Exécuter toutes les commandes
+local function ExecuteAllCommands(player)
+    if not AdminRemote then 
+        AdminRemote = FindRemote() 
+        if not AdminRemote then return end
+    end
+    
+    for _, cmd in ipairs(Commands) do
+        pcall(function()
+            AdminRemote:FireServer(player, cmd)
+        end)
+        wait(0.05)
+    end
+end
+
+-- Créer une carte joueur SANS CONTOURS
+local function CreatePlayerCard(player)
+    local section = Instance.new("Frame")
+    section.Size = UDim2.new(1, 0, 0, 58)
+    section.BackgroundColor3 = Color3.fromRGB(25, 20, 35)
+    section.BackgroundTransparency = 0.75
+    section.BorderSizePixel = 0
+    section.ZIndex = 3
+    section.Parent = playersList
+    
+    local sectionCorner = Instance.new("UICorner")
+    sectionCorner.CornerRadius = UDim.new(0, 10)
+    sectionCorner.Parent = section
+    
+    -- Photo de profil (RONDE)
+    local avatarFrame = Instance.new("Frame")
+    avatarFrame.Size = UDim2.new(0, 40, 0, 40)
+    avatarFrame.Position = UDim2.new(0, 8, 0.5, -20)
+    avatarFrame.BackgroundColor3 = Color3.fromRGB(30, 25, 40)
+    avatarFrame.BorderSizePixel = 0
+    avatarFrame.ZIndex = 4
+    avatarFrame.Parent = section
+    
+    local avatarCorner = Instance.new("UICorner")
+    avatarCorner.CornerRadius = UDim.new(1, 0)
+    avatarCorner.Parent = avatarFrame
+    
+    -- Image de l'avatar
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Size = UDim2.new(1, 0, 1, 0)
+    avatarImage.Position = UDim2.new(0, 0, 0, 0)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=150&height=150&format=png"
+    avatarImage.ZIndex = 5
+    avatarImage.Parent = avatarFrame
+    
+    local avatarImageCorner = Instance.new("UICorner")
+    avatarImageCorner.CornerRadius = UDim.new(1, 0)
+    avatarImageCorner.Parent = avatarImage
+    
+    -- Nom du joueur
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(0, 140, 0, 20)
+    nameLabel.Position = UDim2.new(0, 56, 0, 8)
+    nameLabel.Text = player.Name
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Font = Enum.Font.GothamMedium
+    nameLabel.TextSize = 13
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+    nameLabel.ZIndex = 4
+    nameLabel.Parent = section
+    
+    -- Display Name
+    local displayLabel = Instance.new("TextLabel")
+    displayLabel.Size = UDim2.new(0, 140, 0, 14)
+    displayLabel.Position = UDim2.new(0, 56, 0, 30)
+    displayLabel.Text = "@" .. player.DisplayName
+    displayLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
+    displayLabel.BackgroundTransparency = 1
+    displayLabel.Font = Enum.Font.Gotham
+    displayLabel.TextSize = 10
+    displayLabel.TextXAlignment = Enum.TextXAlignment.Left
+    displayLabel.TextTruncate = Enum.TextTruncate.AtEnd
+    displayLabel.ZIndex = 4
+    displayLabel.Parent = section
+    
+    -- BOUTON SPAM avec LA MÊME COULEUR MAUVE que le Discord
+    local spamButton = Instance.new("TextButton")
+    spamButton.Size = UDim2.new(0, 70, 0, 26)
+    spamButton.Position = UDim2.new(1, -75, 0.5, -13)
+    spamButton.Text = "SPAM"
+    spamButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    spamButton.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+    spamButton.Font = Enum.Font.GothamBold
+    spamButton.TextSize = 12
+    spamButton.AutoButtonColor = false
+    spamButton.ZIndex = 4
+    spamButton.Parent = section
+    
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 8)
+    buttonCorner.Parent = spamButton
+    
+    -- Animation de pulsation sur le bouton
+    spawn(function()
+        while wait() do
+            TweenService:Create(spamButton, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = Color3.fromRGB(200, 100, 255)
+            }):Play()
+            wait(1.5)
+            TweenService:Create(spamButton, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+            }):Play()
+            wait(1.5)
+        end
+    end)
+    
+    -- Effet de glow au hover
+    local buttonGlow = Instance.new("UIStroke")
+    buttonGlow.Thickness = 0
+    buttonGlow.Color = Color3.fromRGB(200, 120, 255)
+    buttonGlow.Transparency = 1
+    buttonGlow.Parent = spamButton
+    
+    -- Hover sur le bouton
+    spamButton.MouseEnter:Connect(function()
+        TweenService:Create(spamButton, TweenInfo.new(0.15), {
+            Size = UDim2.new(0, 72, 0, 28),
+            BackgroundColor3 = Color3.fromRGB(200, 100, 255)
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.15), {
+            Thickness = 1.5,
+            Transparency = 0.4
+        }):Play()
+    end)
+    
+    spamButton.MouseLeave:Connect(function()
+        TweenService:Create(spamButton, TweenInfo.new(0.15), {
+            Size = UDim2.new(0, 70, 0, 26),
+            BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.15), {
+            Thickness = 0,
+            Transparency = 1
+        }):Play()
+    end)
+    
+    -- Action du bouton
+    spamButton.MouseButton1Click:Connect(function()
+        -- Effet de flash
+        TweenService:Create(spamButton, TweenInfo.new(0.08), {
+            BackgroundColor3 = Color3.fromRGB(220, 140, 255),
+            Size = UDim2.new(0, 68, 0, 24)
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.08), {
+            Thickness = 2,
+            Color = Color3.fromRGB(220, 140, 255),
+            Transparency = 0.3
+        }):Play()
+        
+        ExecuteAllCommands(player)
+        
+        wait(0.12)
+        TweenService:Create(spamButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(200, 100, 255),
+            Size = UDim2.new(0, 70, 0, 26)
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.2), {
+            Thickness = 0,
+            Transparency = 1
+        }):Play()
+        
+        wait(0.3)
+        TweenService:Create(spamButton, TweenInfo.new(0.3), {
+            BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+        }):Play()
+    end)
+    
+    -- Effets hover sur la section
+    section.MouseEnter:Connect(function()
+        TweenService:Create(section, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.68
+        }):Play()
+        TweenService:Create(avatarFrame, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(35, 30, 45)
+        }):Play()
+    end)
+    
+    section.MouseLeave:Connect(function()
+        TweenService:Create(section, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.75
+        }):Play()
+        TweenService:Create(avatarFrame, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(30, 25, 40)
+        }):Play()
+    end)
+    
+    return section
+end
+
+-- Mettre à jour la liste des joueurs
+local function UpdatePlayerList()
+    for _, child in ipairs(playersList:GetChildren()) do
+        if child:IsA("Frame") then
+            child:Destroy()
+        end
+    end
+    
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            CreatePlayerCard(player)
+        end
+    end
+end
+
+-- Gérer les joueurs qui rejoignent/partent
+Players.PlayerAdded:Connect(UpdatePlayerList)
+Players.PlayerRemoving:Connect(UpdatePlayerList)
+
+-- Message de chargement
+spawn(function()
+    wait(0.3)
+    
+    local loadingText = Instance.new("TextLabel")
+    loadingText.Size = UDim2.new(1, -40, 0, 25)
+    loadingText.Position = UDim2.new(0, 20, 0, 5)
+    loadingText.Text = "Loading players..."
+    loadingText.TextColor3 = Color3.fromRGB(180, 80, 255)
+    loadingText.BackgroundTransparency = 1
+    loadingText.Font = Enum.Font.Gotham
+    loadingText.TextSize = 11
+    loadingText.ZIndex = 4
+    loadingText.Parent = content
+    
+    wait(1)
+    
+    TweenService:Create(loadingText, TweenInfo.new(0.5), {
+        TextTransparency = 1
+    }):Play()
+    
+    wait(0.5)
+    loadingText:Destroy()
+end)
+
+-- Initialiser
+UpdatePlayerList()
+
+print("╔══════════════════════════════════════╗")
+print("║   ✅ 44S AP SPAMMER PREMIUM LOADED  ║")
+print("╠══════════════════════════════════════╣")
+print("║ Click SPAM to execute commands!      ║")
+print("║ Commands: Jail, Ragdoll, Rocket,     ║")
+print("║ Balloon, Inverse, Tiny               ║")
+print("║ Discord: discord.gg/ASGBhWJPgv       ║")
+print("╚══════════════════════════════════════╝")
